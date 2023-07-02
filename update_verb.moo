@@ -9,9 +9,9 @@ if (player != this)
 endif
 "Check prerequisites:";
 if (typeof(`function_info("curl") ! E_INVARG') == ERR)
-  return player:tell("This verb relies on the curl builtin function to retrieve up-to-date documentation. Please ensure that the server has been compiled with the function enabled. You may need to install a supporting library, such as libcurl. Further information may be available here: https://github.com/lisdude/toaststunt/blob/master/docs/README.md#build-instructions");
+  return player:tell("This verb relies on the curl builtin function to retrieve up-to-date documentation. Please ensure that the server has been compiled with the function enabled. You may need to install a supporting library, such as libcurl. Further information may be available here: https://github.com/dgleks/toaststunt/blob/master/docs/README.md#build-instructions");
 endif
-required_verbs = {{$object_utils, "has_property"}, {$player, "my_match_object"}, {$command_utils, "object_match_failed"}, {$string_utils, "nn"}, {$command_utils, "yes_or_no"}, {$recycler, "_create"}, {$string_utils, "english_list"}, {$list_utils, "map_builtin"}};
+required_verbs = {{$object_utils, "has_property"}, {$player, "match"}, {$command_utils, "object_match_failed"}, {$string_utils, "nn"}, {$command_utils, "yes_or_no"}, {$recycler, "_create"}, {$string_utils, "english_list"}, {$list_utils, "map_builtin"}};
 required_props = {{$sysobj, "generic_help"}, {$sysobj, "prog"}};
 for x in (required_verbs)
   if (typeof(`verb_info(@x) ! E_VERBNF') == ERR)
@@ -47,7 +47,7 @@ endif
 if (typeof(`verb_info($list_utils, "setremove_all") ! E_VERBNF') != ERR && typeof(`verb_info($object_utils, "has_verb") ! E_VERBNF') != ERR)
   verb_loc = $object_utils:has_verb(this, verb)[1];
   if (player.wizard || verb_info(verb_loc, verb)[1] == player)
-    update_url = "https://raw.githubusercontent.com/lisdude/toaststunt-documentation/master/update_verb.moo";
+    update_url = "https://raw.githubusercontent.com/dgleks/toaststunt-documentation/master/update_verb.moo";
     downloaded_data = call_function("curl", update_url);
     if (typeof(downloaded_data) == MAP)
       player:tell("Update check failed: ", downloaded_data["message"]);
@@ -72,7 +72,7 @@ if (!args)
     endif
   endfor
 else
-  match = player:my_match_object(argstr);
+  match = player:match(argstr);
   if ($command_utils:object_match_failed(match, argstr))
     return;
   elseif (isa(match, $generic_help))
@@ -107,7 +107,7 @@ endif
 if (!player.wizard && db.owner != player)
   return player:tell("You don't have permission to update ", $string_utils:nn(db), ".");
 endif
-url = "https://raw.githubusercontent.com/lisdude/toaststunt-documentation/master/function_help.moo";
+url = "https://raw.githubusercontent.com/dgleks/toaststunt-documentation/master/function_help.moo";
 data = call_function("curl", url);
 if (typeof(data) == MAP)
   return player:tell("Error retrieving help text: ", data["message"]);
